@@ -1,0 +1,80 @@
+<div class="activity-log-page">
+  <!-- Page header -->
+  <div class="page-header">
+    <div>
+      <h1>Activity Log</h1>
+      <p class="subtitle">Keep track of significant changes.</p>
+    </div>
+  </div>
+
+  <!-- Filter bar -->
+  <div class="filter-bar">
+    <div class="filter-left">
+      <label class="filter-label">
+        <span>Content type</span>
+        <select [(ngModel)]="contentFilter">
+          <option *ngFor="let opt of filterOptions" [value]="opt.value">
+            {{ opt.label }}
+          </option>
+        </select>
+      </label>
+    </div>
+
+    <button class="filter-button" type="button">
+      &#128269; Filter
+    </button>
+  </div>
+
+  <!-- Activity table card -->
+  <div class="log-card">
+    <table class="log-table">
+      <thead>
+        <tr>
+          <th>Timestamp</th>
+          <th>User</th>
+          <th>Action</th>
+          <th>Content Affected</th>
+          <th>Content ID</th>
+          <th>Status</th>
+        </tr>
+      </thead>
+
+      <tbody>
+        <tr *ngFor="let entry of filteredLog">
+          <td class="col-timestamp">
+            {{ formatTimestamp(entry.timestamp) }}
+          </td>
+          <td class="col-user">
+            {{ entry.userName }}
+          </td>
+          <td class="col-action">
+            {{ entry.action }}
+          </td>
+          <td class="col-content">
+            {{ entry.contentTitle }}
+          </td>
+          <td class="col-id">
+            {{ entry.contentId }}
+          </td>
+          <td class="col-status">
+            <span [ngClass]="getStatusClass(entry.status)">
+              {{ entry.status }}
+            </span>
+          </td>
+        </tr>
+
+        <tr *ngIf="!isLoading && filteredLog.length === 0">
+          <td colspan="6" class="empty-row">
+            No activity found for this filter.
+          </td>
+        </tr>
+
+        <tr *ngIf="isLoading">
+          <td colspan="6" class="empty-row">
+            Loading activity log...
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>

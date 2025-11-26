@@ -1,0 +1,260 @@
+<!-- HEADER: title + search -->
+<div class="header-row">
+  <h2>Pages</h2>
+
+  <input
+    class="search-box"
+    type="text"
+    placeholder="Search pages..."
+    [(ngModel)]="searchTerm"
+    (input)="onSearchChange()"
+  />
+</div>
+
+<!-- SUB HEADER: New Page button -->
+<div class="sub-header-row">
+  <button class="btn-dark" (click)="openNewModal()">New Page</button>
+</div>
+
+<!-- LOADING / ERROR -->
+<div *ngIf="isLoading">Loading pages...</div>
+<div *ngIf="error" class="error">{{ error }}</div>
+
+<div *ngIf="!isLoading && !error && filteredPages.length === 0">
+  No pages found.
+</div>
+
+<!-- PAGES GRID -->
+<div class="posts-grid" *ngIf="filteredPages.length > 0">
+  <div class="post-card" *ngFor="let page of filteredPages">
+    <div class="thumbnail"></div>
+
+    <h3>{{ page.title }}</h3>
+    <p class="slug">/{{ page.slug }}</p>
+    <p class="description">{{ page.description }}</p>
+
+    <p class="content-preview">
+      {{ page.content | slice: 0: 160
+      }}<span *ngIf="page.content && page.content.length > 160">…</span>
+    </p>
+
+    <div class="footer">
+      <span class="status" [class.published]="page.status === 'published'">
+        {{ page.status | titlecase }}
+      </span>
+
+      <div class="actions">
+        <button class="btn-outline" (click)="openEditModal(page)">Edit</button>
+        <button class="btn-dark" (click)="openPreview(page)">Preview</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ========== NEW PAGE MODAL ========== -->
+<div class="modal-backdrop" *ngIf="showNewModal">
+  <div class="modal">
+    <div class="modal-header">
+      <h3>New Page</h3>
+      <button class="close-btn" (click)="closeNewModal()">×</button>
+    </div>
+
+    <div class="modal-body">
+      <div class="form-row">
+        <label>Title</label>
+        <input type="text" [(ngModel)]="newPage.title" />
+      </div>
+
+      <div class="form-row">
+        <label>Slug</label>
+        <input type="text" [(ngModel)]="newPage.slug" />
+      </div>
+
+      <div class="form-row">
+        <label>Short Description</label>
+        <textarea rows="2" [(ngModel)]="newPage.description"></textarea>
+      </div>
+
+      <div class="form-row">
+        <label>Content</label>
+        <textarea rows="8" [(ngModel)]="newPage.content"></textarea>
+      </div>
+
+      <div class="form-row">
+        <label>Status</label>
+        <select [(ngModel)]="newPage.status">
+          <option value="draft">Draft</option>
+          <option value="published">Published</option>
+        </select>
+      </div>
+
+      <div class="form-row">
+        <label>Featured Image URL</label>
+        <input type="text" [(ngModel)]="newPage.featuredImage" />
+      </div>
+
+      <div class="form-row">
+        <label>Tags (comma separated)</label>
+        <input type="text" [(ngModel)]="newPage.tags" />
+      </div>
+
+      <div class="form-row">
+        <label>Main Page / Section</label>
+        <select [(ngModel)]="newPage.category">
+          <option value="">(None)</option>
+          <option *ngFor="let opt of mainPageOptions" [value]="opt">
+            {{ opt }}
+          </option>
+        </select>
+      </div>
+
+      <div class="form-row">
+        <label>Publish Date</label>
+        <input type="date" [(ngModel)]="newPage.publishDate" />
+      </div>
+
+      <div class="form-row">
+        <label>Author</label>
+        <input type="text" [(ngModel)]="newPage.author" />
+      </div>
+    </div>
+
+    <div class="modal-footer">
+      <button class="btn-outline" (click)="closeNewModal()">Cancel</button>
+      <button class="btn-dark" (click)="saveNewPage()">
+        {{ isSaving ? 'Saving…' : 'Save Page' }}
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- ========== EDIT PAGE MODAL ========== -->
+<div class="modal-backdrop" *ngIf="showEditModal">
+  <div class="modal">
+    <div class="modal-header">
+      <h3>Edit Page</h3>
+      <button class="close-btn" (click)="closeEditModal()">×</button>
+    </div>
+
+    <div class="modal-body">
+      <div class="form-row">
+        <label>Title</label>
+        <input type="text" [(ngModel)]="editPageObj.title" />
+      </div>
+
+      <div class="form-row">
+        <label>Slug</label>
+        <input type="text" [(ngModel)]="editPageObj.slug" />
+      </div>
+
+      <div class="form-row">
+        <label>Short Description</label>
+        <textarea rows="2" [(ngModel)]="editPageObj.description"></textarea>
+      </div>
+
+      <div class="form-row">
+        <label>Content</label>
+        <textarea rows="8" [(ngModel)]="editPageObj.content"></textarea>
+      </div>
+
+      <div class="form-row">
+        <label>Status</label>
+        <select [(ngModel)]="editPageObj.status">
+          <option value="draft">Draft</option>
+          <option value="published">Published</option>
+        </select>
+      </div>
+
+      <div class="form-row">
+        <label>Featured Image URL</label>
+        <input type="text" [(ngModel)]="editPageObj.featuredImage" />
+      </div>
+
+      <div class="form-row">
+        <label>Tags</label>
+        <input type="text" [(ngModel)]="editPageObj.tags" />
+      </div>
+
+      <div class="form-row">
+        <label>Main Page / Section</label>
+        <select [(ngModel)]="editPageObj.category">
+          <option value="">(None)</option>
+          <option *ngFor="let opt of mainPageOptions" [value]="opt">
+            {{ opt }}
+          </option>
+        </select>
+      </div>
+
+      <div class="form-row">
+        <label>Publish Date</label>
+        <input type="date" [(ngModel)]="editPageObj.publishDate" />
+      </div>
+
+      <div class="form-row">
+        <label>Author</label>
+        <input type="text" [(ngModel)]="editPageObj.author" />
+      </div>
+    </div>
+
+    <div class="modal-footer">
+      <!-- ⭐ NEW: DELETE BUTTON (only if editing existing page) -->
+      <button
+        class="btn-danger"
+        *ngIf="editPageObj.id"
+        (click)="deletePage()"
+      >
+        Delete
+      </button>
+
+      <button class="btn-outline" (click)="closeEditModal()">Cancel</button>
+      <button class="btn-dark" (click)="saveEditPage()">
+        {{ isSaving ? 'Saving…' : 'Save Changes' }}
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- ========== PREVIEW PAGE MODAL ========== -->
+<div class="modal-backdrop" *ngIf="showPreviewModal">
+  <div class="modal" *ngIf="previewPage as p">
+    <div class="modal-header">
+      <h3>{{ p.title }}</h3>
+      <button class="close-btn" (click)="closePreview()">×</button>
+    </div>
+
+    <div class="modal-body preview-body">
+      <p class="preview-meta">
+        <strong>Status:</strong> {{ p.status | titlecase }}
+        <span class="slug"> · /{{ p.slug }}</span>
+
+        <span *ngIf="p.category">
+          · <strong>Main page:</strong> {{ p.category }}
+        </span>
+
+        <span *ngIf="p.publishDate">
+          · <strong>Published:</strong> {{ p.publishDate | date:'MMM d, y' }}
+        </span>
+      </p>
+
+      <p class="preview-description">{{ p.description }}</p>
+
+      <div class="preview-content">
+        {{ p.content }}
+      </div>
+
+      <div class="preview-seo">
+        <p *ngIf="p.author">
+          <strong>Author:</strong> {{ p.author }}
+        </p>
+
+        <p *ngIf="p.tags">
+          <strong>Tags:</strong> {{ p.tags }}
+        </p>
+      </div>
+    </div>
+
+    <div class="modal-footer">
+      <button class="btn-outline" (click)="closePreview()">Close</button>
+    </div>
+  </div>
+</div>

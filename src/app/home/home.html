@@ -1,0 +1,19 @@
+<div class="home-content">
+  <div class="cards-row">
+    <app-widget *ngFor="let card of cards" [data]="card"></app-widget>
+  </div>
+
+  <div class="latest-activity-card">
+    <h3>Latest Activity</h3>
+    <div class="activity-content">
+      <div *ngFor="let item of latestActivity" class="activity-item">
+        <div class="activity-icon">
+          <img [src]="item.icon" alt="icon" />
+        </div>
+        <div class="activity-text">{{ item.text }}</div>
+        <div class="activity-user">{{ item.user }}</div>
+        <div class="activity-time">{{ item.time }}</div>
+      </div>
+    </div>
+  </div>
+</div>

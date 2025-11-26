@@ -1,0 +1,76 @@
+.home-content {
+  padding: 20px;
+  flex: 1; // fill remaining space in MainLayout
+  display: flex;
+  flex-direction: column;
+  gap: 30px;
+  overflow-y: auto; // scroll if content is tall
+
+  .cards-row {
+    display: flex;
+    gap: 20px;
+    flex-wrap: wrap;
+
+    app-widget {
+      flex: 1 1 180px;
+      min-width: 180px;
+    }
+  }
+
+  .latest-activity-card {
+  background-color: #fff;
+  padding: 20px;
+  border-radius: 16px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+
+    h3 {
+      margin-bottom: 15px;
+      font-size: 1.1rem;
+      color: #333;
+    }
+
+    .activity-content {
+    display: flex;
+    flex-direction: column;
+    gap: 15px; // invisible spacing between items
+    max-height: 300px; // limit height
+    overflow: hidden;  // hide extra content
+  }
+
+      .activity-item {
+        display: flex;
+        align-items: center;
+        padding: 8px 0;
+        border-bottom: 1px solid #e0e0e0;
+        gap: 10px;
+
+        &:last-child {
+          border-bottom: none;
+        }
+
+        .activity-icon {
+          img {
+            width: 24px;
+            height: 24px;
+            object-fit: contain;
+          }
+        }
+
+        .activity-text {
+          flex: 1;
+          color: #555;
+        }
+
+        .activity-user {
+          font-weight: 500;
+          color: #222;
+          margin-right: 10px;
+        }
+
+        .activity-time {
+          color: #888;
+          font-size: 0.85rem;
+        }
+      }
+    }
+  }

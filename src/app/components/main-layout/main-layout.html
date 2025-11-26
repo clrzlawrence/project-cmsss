@@ -1,0 +1,107 @@
+<div class="main-layout">
+  <app-header [showProfile]="true" />
+
+  <div class="layout-container">
+    <aside
+      class="sidebar"
+      [ngClass]="{ 'sidebar-collapsed': isDesktopCollapsed, open: sidebarOpen }"
+    >
+      <nav class="sidebar-nav">
+        <a routerLink="/home" routerLinkActive="active" class="nav-item">
+          <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 1024 1025">
+            <path
+              fill="currentColor"
+              d="M1004.5 556.5Q985 576 957.5 576T911 557l-15-15v419q0 26-18.5 45t-45.5 19H640V737q0-13-9.5-22.5T608 705H416q-13 0-22.5 9.5T384 737v288H192q-27 0-45.5-19T128 961V542l-15 15q-19 19-46.5 19t-47-19.5t-19.5-47T19 463L463 19q20-20 49-19q29-1 49 19l444 444q19 19 19 46.5t-19.5 47z"
+            />
+          </svg>
+          <span class="nav-text">Home</span>
+        </a>
+
+        <a routerLink="/content" routerLinkActive="active" class="nav-item">
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            width="20"
+            height="20"
+            fill="currentColor"
+            viewBox="0 0 24 24"
+          >
+            <path
+              fill="currentColor"
+              d="M3 5.6A2.6 2.6 0 0 1 5.6 3h2.8A2.6 2.6 0 0 1 11 5.6v2.8A2.6 2.6 0 0 1 8.4 11H5.6A2.6 2.6 0 0 1 3 8.4zm0 10A2.6 2.6 0 0 1 5.6 13h2.8a2.6 2.6 0 0 1 2.6 2.6v2.8A2.6 2.6 0 0 1 8.4 21H5.6A2.6 2.6 0 0 1 3 18.4zm10-10A2.6 2.6 0 0 1 15.6 3h2.8A2.6 2.6 0 0 1 21 5.6v2.8a2.6 2.6 0 0 1-2.6 2.6h-2.8A2.6 2.6 0 0 1 13 8.4zm4 7.4a1 1 0 0 1 1 1v2h2a1 1 0 1 1 0 2h-2v2a1 1 0 1 1-2 0v-2h-2a1 1 0 1 1 0-2h2v-2a1 1 0 0 1 1-1"
+            />
+          </svg>
+          <span class="nav-text">Contents</span>
+        </a>
+
+        <a routerLink="/activity-log" routerLinkActive="active" class="nav-item">
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            width="20"
+            height="20"
+            fill="currentColor"
+            viewBox="0 0 24 24"
+          >
+            <path
+              fill="currentColor"
+              d="M1 21v-2h22v2H1Zm3-3q-.825 0-1.413-.588T2 16v-5h5.375L9.1 14.45q.125.25.363.4t.512.15q.275 0 .525-.125t.375-.375l3.075-5.375l.65 1.325q.125.275.375.413T15.5 11H22v5q0 .825-.588 1.412T20 18H4Zm6.075-6.125L8.9 9.55q-.125-.25-.375-.4T8 9H2V5q0-.825.588-1.413T4 3h16q.825 0 1.413.588T22 5v4h-5.875L14.9 6.55q-.125-.275-.375-.413T14 6q-.275 0-.5.138t-.35.362l-3.075 5.375Z"
+            />
+          </svg>
+          <span class="nav-text">Activity Log</span>
+        </a>
+
+        <!-- Add more navigation items as needed -->
+      </nav>
+
+      <!-- NEW: Desktop Toggle Button -->
+      <button (click)="toggleDesktopSidebar()" class="sidebar-toggle-btn">
+        <svg
+          *ngIf="!isDesktopCollapsed"
+          xmlns="http://www.w3.org/2000/svg"
+          width="20"
+          height="20"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+        >
+          <path
+            stroke="currentColor"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            stroke-width="2"
+            d="M3 6h18M3 12h18M3 18h18"
+          />
+        </svg>
+        <svg
+          *ngIf="isDesktopCollapsed"
+          xmlns="http://www.w3.org/2000/svg"
+          width="20"
+          height="20"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+        >
+          <path
+            stroke="currentColor"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            stroke-width="2"
+            d="M3 6h18M3 12h18M3 18h18"
+          />
+        </svg>
+      </button>
+    </aside>
+
+    <!-- 
+      Main Content Area:
+      - Added [ngClass] to handle content margin shift.
+    -->
+    <div class="content-wrapper" [ngClass]="{ 'content-expanded': isDesktopCollapsed }">
+      <main class="main-content">
+        <router-outlet />
+      </main>
+
+      <!-- Footer -->
+      <app-footer />
+    </div>
+  </div>
+</div>

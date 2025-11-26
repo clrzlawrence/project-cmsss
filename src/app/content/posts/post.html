@@ -1,0 +1,173 @@
+<div class="header-row">
+  <h2>Posts</h2>
+
+  <input
+    class="search-box"
+    type="text"
+    placeholder="Search posts..."
+    [(ngModel)]="searchTerm"
+    (input)="onSearchChange()"
+  />
+</div>
+
+<!-- ROW 2: New Post button sa left -->
+<div class="sub-header-row">
+  <button class="btn-dark" (click)="openNewModal()">New Post</button>
+</div>
+
+<!-- LOADING / ERROR -->
+<div *ngIf="isLoading">Loading posts...</div>
+<div *ngIf="error" class="error">{{ error }}</div>
+
+<div *ngIf="!isLoading && !error && filteredPosts.length === 0">
+  No posts found.
+</div>
+
+<!-- POSTS GRID -->
+<div class="posts-grid" *ngIf="filteredPosts.length > 0">
+  <div class="post-card" *ngFor="let post of filteredPosts">
+    <div class="thumbnail"></div>
+
+    <h3>{{ post.title }}</h3>
+    <p class="slug">/{{ post.slug }}</p>
+    <p class="description">{{ post.description }}</p>
+
+    <p class="content-preview">
+      {{ post.content | slice: 0: 160
+      }}<span *ngIf="post.content && post.content.length > 160">…</span>
+    </p>
+
+    <!-- ⭐ FOOTER = pirme sa pinakailalom sa card ⭐ -->
+    <div class="footer">
+      <span class="status" [class.published]="post.status === 'published'">
+        {{ post.status | titlecase }}
+      </span>
+
+      <div class="actions">
+        <button class="btn-outline" (click)="openEditModal(post)">Edit</button>
+        <button class="btn-dark" (click)="openPreview(post)">Preview</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ========== NEW POST MODAL ========== -->
+<div class="modal-backdrop" *ngIf="showNewModal">
+  <div class="modal">
+    <div class="modal-header">
+      <h3>New Post</h3>
+      <button class="close-btn" (click)="closeNewModal()">×</button>
+    </div>
+
+    <div class="modal-body">
+      <div class="form-row">
+        <label>Title</label>
+        <input type="text" [(ngModel)]="newPost.title" />
+      </div>
+
+      <div class="form-row">
+        <label>Slug</label>
+        <input type="text" [(ngModel)]="newPost.slug" />
+      </div>
+
+      <div class="form-row">
+        <label>Short Description</label>
+        <textarea rows="2" [(ngModel)]="newPost.description"></textarea>
+      </div>
+
+      <div class="form-row">
+        <label>Content</label>
+        <textarea rows="8" [(ngModel)]="newPost.content"></textarea>
+      </div>
+
+      <div class="form-row">
+        <label>Status</label>
+        <select [(ngModel)]="newPost.status">
+          <option value="draft">Draft</option>
+          <option value="published">Published</option>
+        </select>
+      </div>
+    </div>
+
+    <div class="modal-footer">
+      <button class="btn-outline" (click)="closeNewModal()">Cancel</button>
+      <button class="btn-dark" (click)="saveNewPost()">
+        {{ isSaving ? 'Saving…' : 'Save Post' }}
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- ========== EDIT MODAL ========== -->
+<div class="modal-backdrop" *ngIf="showEditModal">
+  <div class="modal">
+    <div class="modal-header">
+      <h3>Edit Post</h3>
+      <button class="close-btn" (click)="closeEditModal()">×</button>
+    </div>
+
+    <div class="modal-body">
+      <div class="form-row">
+        <label>Title</label>
+        <input type="text" [(ngModel)]="editPost.title" />
+      </div>
+
+      <div class="form-row">
+        <label>Slug</label>
+        <input type="text" [(ngModel)]="editPost.slug" />
+      </div>
+
+      <div class="form-row">
+        <label>Short Description</label>
+        <textarea rows="2" [(ngModel)]="editPost.description"></textarea>
+      </div>
+
+      <div class="form-row">
+        <label>Content</label>
+        <textarea rows="8" [(ngModel)]="editPost.content"></textarea>
+      </div>
+
+      <div class="form-row">
+        <label>Status</label>
+        <select [(ngModel)]="editPost.status">
+          <option value="draft">Draft</option>
+          <option value="published">Published</option>
+        </select>
+      </div>
+    </div>
+
+    <div class="modal-footer">
+      <button class="btn-outline" (click)="closeEditModal()">Cancel</button>
+      <button class="btn-dark" (click)="saveEditPost()">
+        {{ isSaving ? 'Saving…' : 'Save Changes' }}
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- ========== PREVIEW MODAL ========== -->
+<div class="modal-backdrop" *ngIf="showPreviewModal">
+  <div class="modal" *ngIf="previewPost as p">
+    <div class="modal-header">
+      <h3>{{ p.title }}</h3>
+      <button class="close-btn" (click)="closePreview()">×</button>
+    </div>
+
+    <div class="modal-body preview-body">
+      <p class="preview-meta">
+        <strong>Status:</strong> {{ p.status | titlecase }} ·
+        <span class="slug">/{{ p.slug }}</span>
+      </p>
+
+      <p class="preview-description">{{ p.description }}</p>
+
+      <div class="preview-content">
+        {{ p.content }}
+      </div>
+    </div>
+
+    <div class="modal-footer">
+      <button class="btn-outline" (click)="closePreview()">Close</button>
+    </div>
+  </div>
+</div>

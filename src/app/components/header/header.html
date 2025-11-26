@@ -1,0 +1,81 @@
+<header>
+  <nav>
+    <div class="logo-container">
+      <img
+        src="https://www.ibcauto.com/assets/img/ibc-logo-svg.svg"
+        alt="ibc auto logo"
+        width="50px"
+        height="50px"
+      />
+    </div>
+
+    <!-- Profile section - only shows when showProfile is true -->
+    <div class="profile-section" *ngIf="showProfile">
+      <div class="profile-trigger" (click)="toggleDropdown()">
+        <img
+          src="https://scontent-mnl1-1.xx.fbcdn.net/v/t39.30808-1/224570019_4882169058494561_8380156668375777092_n.jpg?stp=dst-jpg_s200x200_tt6&_nc_cat=110&ccb=1-7&_nc_sid=1d2534&_nc_eui2=AeGig9udzX9Q7bCmIoKqkmzskld63bbbx1KSV3rdttvHUkDMPUxUecj_10BQkNPthUW_vrBVzge2eyP8D3QG6sRm&_nc_ohc=vysagaBbQLYQ7kNvwF5UO9S&_nc_oc=AdkXo6B0Sal7CXdExYYpYgfB6_ca_YfpCHMYPDQVo519LBzEKlzduvvm_5b9W9x4b0c&_nc_zt=24&_nc_ht=scontent-mnl1-1.xx&_nc_gid=Y7BgoqIvH2HiQ3N_601upg&oh=00_AfgfN-ZKs_EHhSK4zv_RB3rD-pBd5HcfxIhIO38ZXcoZLg&oe=691A01C5"
+          [alt]="userName"
+          class="profile-avatar"
+        />
+        <div class="profile-info">
+          <span class="profile-name">{{ userName }}</span>
+          <span class="profile-email">{{ userEmail }}</span>
+        </div>
+      </div>
+
+      <!-- Dropdown menu -->
+      <div class="profile-dropdown" *ngIf="showDropdown">
+        <a class="dropdown-item" routerLink="/profile">
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            width="16"
+            height="16"
+            fill="currentColor"
+            viewBox="0 0 16 16"
+          >
+            <path d="M11 6a3 3 0 1 1-6 0 3 3 0 0 1 6 0z" />
+            <path
+              fill-rule="evenodd"
+              d="M0 8a8 8 0 1 1 16 0A8 8 0 0 1 0 8zm8-7a7 7 0 0 0-5.468 11.37C3.242 11.226 4.805 10 8 10s4.757 1.225 5.468 2.37A7 7 0 0 0 8 1z"
+            />
+          </svg>
+          Profile
+        </a>
+        <a class="dropdown-item" routerLink="/settings">
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            width="16"
+            height="16"
+            fill="currentColor"
+            viewBox="0 0 16 16"
+          >
+            <path
+              d="M9.405 1.05c-.413-1.4-2.397-1.4-2.81 0l-.1.34a1.464 1.464 0 0 1-2.105.872l-.31-.17c-1.283-.698-2.686.705-1.987 1.987l.169.311c.446.82.023 1.841-.872 2.105l-.34.1c-1.4.413-1.4 2.397 0 2.81l.34.1a1.464 1.464 0 0 1 .872 2.105l-.17.31c-.698 1.283.705 2.686 1.987 1.987l.311-.169a1.464 1.464 0 0 1 2.105.872l.1.34c.413 1.4 2.397 1.4 2.81 0l.1-.34a1.464 1.464 0 0 1 2.105-.872l.31.17c1.283.698 2.686-.705 1.987-1.987l-.169-.311a1.464 1.464 0 0 1 .872-2.105l.34-.1c1.4-.413 1.4-2.397 0-2.81l-.34-.1a1.464 1.464 0 0 1-.872-2.105l.17-.31c.698-1.283-.705-2.686-1.987-1.987l-.311.169a1.464 1.464 0 0 1-2.105-.872l-.1-.34zM8 10.93a2.929 2.929 0 1 1 0-5.86 2.929 2.929 0 0 1 0 5.858z"
+            />
+          </svg>
+          Settings
+        </a>
+        <div class="dropdown-divider"></div>
+        <a class="dropdown-item" (click)="logout()">
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            width="16"
+            height="16"
+            fill="currentColor"
+            viewBox="0 0 16 16"
+          >
+            <path
+              fill-rule="evenodd"
+              d="M10 12.5a.5.5 0 0 1-.5.5h-8a.5.5 0 0 1-.5-.5v-9a.5.5 0 0 1 .5-.5h8a.5.5 0 0 1 .5.5v2a.5.5 0 0 0 1 0v-2A1.5 1.5 0 0 0 9.5 2h-8A1.5 1.5 0 0 0 0 3.5v9A1.5 1.5 0 0 0 1.5 14h8a1.5 1.5 0 0 0 1.5-1.5v-2a.5.5 0 0 0-1 0v2z"
+            />
+            <path
+              fill-rule="evenodd"
+              d="M15.854 8.354a.5.5 0 0 0 0-.708l-3-3a.5.5 0 0 0-.708.708L14.293 7.5H5.5a.5.5 0 0 0 0 1h8.793l-2.147 2.146a.5.5 0 0 0 .708.708l3-3z"
+            />
+          </svg>
+          Logout
+        </a>
+      </div>
+    </div>
+  </nav>
+</header>

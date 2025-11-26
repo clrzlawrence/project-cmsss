@@ -1,0 +1,310 @@
+/* HEADER */
+
+.contents-header {
+  display: flex;
+  justify-content: flex-start;  /* ⭐ heading only, no space-between */
+  align-items: center;
+  margin-bottom: 8px;
+
+  h2 {
+    font-size: 22px;
+    font-weight: 600;
+  }
+}
+
+/* ⭐ new row for button, left aligned */
+.sub-header-row {
+  display: flex;
+  justify-content: flex-start;
+  margin-bottom: 20px;
+}
+
+.btn-primary {
+  padding: 8px 16px;
+  background: #000;
+  color: #fff;
+  border-radius: 999px;
+  border: none;
+  cursor: pointer;
+  font-size: 14px;
+}
+
+/* CARDS / GRID */
+
+.banners-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+  gap: 16px;
+  margin-top: 16px;
+}
+
+.banner-card {
+  background: #fff;
+  padding: 16px;
+  border-radius: 12px;
+  border: 1px solid #eee;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+  display: flex;
+  flex-direction: column;
+  height: 360px;
+  overflow: hidden;
+}
+
+.banner-img {
+  width: 100%;
+  height: 150px;
+  object-fit: cover;
+  border-radius: 10px;
+  margin-bottom: 8px;
+}
+
+.banner-title {
+  font-size: 16px;
+  font-weight: 600;
+  margin: 4px 0;
+}
+
+.banner-date {
+  font-size: 13px;
+  margin: 2px 0;
+}
+
+/* STATUS PILL */
+
+.status-pill {
+  padding: 4px 10px;
+  border-radius: 999px;
+  font-size: 12px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: .5px;
+}
+
+.status-pill.published {
+  background: #dcfce7;
+  color: #166534;
+  border: 1px solid #bbf7d0;
+}
+
+.status-pill.draft {
+  background: #e5e7eb;
+  color: #374151;
+  border: 1px solid #d1d5db;
+}
+
+/* preview text – clamp to 3 lines */
+
+.banner-preview {
+  font-size: 13px;
+  color: #444;
+  margin-top: 6px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+}
+
+/* FOOTER */
+
+.banner-footer {
+  margin-top: auto;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.card-actions {
+  display: flex;
+  gap: 8px;
+
+  button {
+    padding: 4px 10px;
+    border-radius: 999px;
+    border: 1px solid #ddd;
+    background: #f9fafb;
+    font-size: 12px;
+    cursor: pointer;
+  }
+}
+
+.error {
+  color: #b91c1c;
+}
+
+/* MODAL BACKDROP + CONTAINER */
+
+.modal-backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.45);
+  z-index: 40;
+}
+
+.modal {
+  position: fixed;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 50;
+}
+
+/* MAIN MODAL BOX */
+
+.modal-content {
+  background: #fff;
+  padding: 24px;
+  border-radius: 16px;
+  width: 90%;
+  max-width: 900px;
+  max-height: 80vh;
+  overflow-y: auto;
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.35);
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  position: relative;
+
+  h3 {
+    margin-bottom: 4px;
+    font-size: 18px;
+    font-weight: 600;
+  }
+
+  label {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    font-size: 14px;
+
+    input,
+    select,
+    textarea {
+      padding: 8px 10px;
+      border-radius: 8px;
+      border: 1px solid #d1d5db;
+      font-size: 14px;
+    }
+
+    textarea {
+      resize: vertical;
+      min-height: 80px;
+    }
+
+    /* ⭐ ADDED FOR QUILL EDITOR */
+    .ql-toolbar,
+    .ql-container {
+      border-radius: 8px;
+      border: 1px solid #d1d5db;
+    }
+
+    .ql-container {
+      min-height: 120px;
+      font-size: 14px;
+    }
+  }
+}
+
+.modal-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 8px;
+  margin-top: 8px;
+
+  button {
+    padding: 8px 14px;
+    border-radius: 999px;
+    border: none;
+    cursor: pointer;
+    font-size: 14px;
+  }
+
+  button[type='button'] {
+    background: #e5e7eb;
+  }
+
+  button[type='submit'] {
+    background: #111827;
+    color: #fff;
+  }
+}
+
+.modal-actions .spacer {
+  flex: 1 1 auto;
+}
+
+/* red delete button */
+
+.btn-danger {
+  background: #fee2e2;
+  color: #b91c1c;
+}
+
+.btn-danger:hover {
+  background: #fecaca;
+}
+
+/* PREVIEW MODAL */
+
+.preview-modal {
+  max-height: 80vh;
+  overflow-y: auto;
+  padding-top: 32px;
+}
+
+.preview-image-wrapper {
+  margin: 8px 0 12px 0;
+}
+
+.preview-image {
+  width: 100%;
+  border-radius: 10px;
+}
+
+.preview-content {
+  white-space: pre-wrap;
+  font-size: 14px;
+  line-height: 1.5;
+}
+
+/* X sa taas */
+
+.modal-close-x {
+  position: absolute;
+  top: 10px;
+  right: 12px;
+  background: transparent;
+  border: none;
+  font-size: 20px;
+  cursor: pointer;
+  font-weight: bold;
+  color: #333;
+}
+
+.modal-close-x:hover {
+  color: #000;
+}
+
+/* Close button sa ubos */
+
+.modal-close-btn {
+  background: #e5e7eb;
+  color: #111827;
+}
+
+/* DATETIME ROW (Material date + time) */
+
+.datetime-row {
+  display: flex;
+  gap: 12px;
+  margin-top: 4px;
+}
+
+.date-field {
+  flex: 1 1 auto;
+}
+
+.time-field {
+  width: 150px;
+}

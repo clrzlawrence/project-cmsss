@@ -1,0 +1,12 @@
+<div class="card">
+  <div class="card-top">
+    <div class="icon" [innerHTML]="data.icon"></div>
+    <div class="card-text">
+      <h3 class="card-title">{{ data.title }}</h3>
+      <p class="card-number">{{ data.number }}</p>
+    </div>
+  </div>
+
+  <!-- ⭐ ADDED (click)="onViewClick()" -->
+  <button class="view-btn" (click)="onViewClick()">View</button>
+</div>

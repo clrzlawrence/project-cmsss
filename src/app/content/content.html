@@ -1,0 +1,36 @@
+<div class="content-wrapper">
+  <div class="content-header">
+    <h2>Contents</h2>
+
+    <!-- Subheader: tabs (left) + search (right) -->
+    <div class="content-subheader">
+      <nav class="content-tabs">
+        <a
+          routerLink="pages"
+          routerLinkActive="active"
+          [routerLinkActiveOptions]="{ exact: true }"
+        >
+          Pages
+        </a>
+        <a routerLink="posts" routerLinkActive="active">Posts</a>
+        <a routerLink="banners" routerLinkActive="active">Banners</a>
+      </nav>
+
+          
+
+
+      <!-- Search area (pwede nato lig-onon later) 
+      <div class="content-search">
+        <input
+          type="text"
+          placeholder="Search pages..."
+        />
+        
+      </div>-->
+    </div>
+  </div>
+
+  <div class="content-body">
+    <router-outlet></router-outlet>
+  </div>
+</div>

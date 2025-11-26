@@ -1,0 +1,81 @@
+<div class="content-wrapper">
+  <div class="login-container">
+    <form [formGroup]="form" (ngSubmit)="onLogin()">
+      <div class="login-header">
+        <div class="lock-icon">
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            width="16"
+            height="16"
+            fill="currentColor"
+            class="bi bi-lock"
+            viewBox="0 0 16 16"
+          >
+            <path
+              fill-rule="evenodd"
+              d="M8 0a4 4 0 0 1 4 4v2.05a2.5 2.5 0 0 1 2 2.45v5a2.5 2.5 0 0 1-2.5 2.5h-7A2.5 2.5 0 0 1 2 13.5v-5a2.5 2.5 0 0 1 2-2.45V4a4 4 0 0 1 4-4M4.5 7A1.5 1.5 0 0 0 3 8.5v5A1.5 1.5 0 0 0 4.5 15h7a1.5 1.5 0 0 0 1.5-1.5v-5A1.5 1.5 0 0 0 11.5 7zM8 1a3 3 0 0 0-3 3v2h6V4a3 3 0 0 0-3-3"
+            />
+          </svg>
+        </div>
+        <h1 class="welcome-title">Welcome back</h1>
+        <p class="subtitle">Sign in to your CMS account</p>
+      </div>
+
+      <div class="input-group">
+        <!-- Email Field -->
+        <div class="form-field">
+          <label for="email">Email</label>
+          <input
+            type="email"
+            id="email"
+            placeholder="name@example.com"
+            formControlName="email"
+            [class.invalid]="form.get('email')?.invalid && form.get('email')?.touched"
+            required
+          />
+          <div
+            *ngIf="form.get('email')?.invalid && form.get('email')?.touched"
+            class="validation-error"
+          >
+            <span *ngIf="form.get('email')?.errors?.['required']">Email is required.</span>
+            <span *ngIf="form.get('email')?.errors?.['email']">Must be a valid email format.</span>
+          </div>
+        </div>
+
+        <!-- Password Field -->
+        <div class="form-field">
+          <label for="password">Password</label>
+          <input
+            type="password"
+            id="password"
+            placeholder="Password"
+            formControlName="password"
+            [class.invalid]="form.get('password')?.invalid && form.get('password')?.touched"
+            required
+          />
+          <div
+            *ngIf="form.get('password')?.invalid && form.get('password')?.touched"
+            class="validation-error"
+          >
+            Password is required.
+          </div>
+        </div>
+      </div>
+
+      <!-- Global Error Message -->
+      <div *ngIf="errorMessage" class="error-message">
+        {{ errorMessage }}
+      </div>
+
+      <div class="login-actions">
+        <button type="submit" class="btn btn-primary" [disabled]="isLoading">
+          {{ isLoading ? 'Signing in...' : 'Sign in' }}
+        </button>
+        <p class="signup-link">
+          Don't have an account?
+          <a routerLink="/auth/signup">Sign up</a>
+        </p>
+      </div>
+    </form>
+  </div>
+</div>

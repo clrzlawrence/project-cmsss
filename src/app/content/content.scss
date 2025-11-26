@@ -1,0 +1,62 @@
+.content-wrapper {
+  padding: 24px;
+}
+
+.content-header {
+  display: flex;
+  flex-direction: column; // title sa taas, subheader sa ubos
+  gap: 8px;
+  margin-bottom: 16px;
+
+  h2 {
+    margin: 0;
+    font-size: 24px;
+    font-weight: 600;
+  }
+}
+
+/* Linyang naa ang tabs (left) ug search (right) */
+.content-subheader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 16px;
+}
+
+.content-tabs {
+  display: flex;
+  gap: 12px;
+
+  a {
+    text-decoration: none;
+    padding: 8px 16px;
+    border-radius: 999px;
+    border: 1px solid #ddd;
+    font-size: 14px;
+    color: #555;
+    background: #f7f7f7;
+    cursor: pointer;
+  }
+
+  a.active {
+    background: #000;
+    color: #fff;
+    border-color: #000;
+  }
+}
+
+/* Search box sa tuo */
+.content-search {
+  input {
+    padding: 8px 12px;
+    border-radius: 999px;
+    border: 1px solid #ddd;
+    font-size: 14px;
+    min-width: 220px;
+    max-width: 280px;
+  }
+}
+
+.content-body {
+  margin-top: 8px;
+}
