@@ -3,6 +3,9 @@ import { CommonModule } from '@angular/common';
 import { HttpClient } from '@angular/common/http';
 import { FormsModule } from '@angular/forms';
 
+// Angular Editor
+import { AngularEditorModule, AngularEditorConfig } from '@kolkov/angular-editor';
+
 export interface Page {
   id?: string;
   title: string;
@@ -21,7 +24,7 @@ export interface Page {
 @Component({
   selector: 'app-pages',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule, AngularEditorModule],
   templateUrl: './pages.html',
   styleUrls: ['./pages.scss'],
 })
@@ -55,6 +58,38 @@ export class PagesComponent implements OnInit {
     'Contact',
     'News'
   ];
+
+  // AngularEditor config
+  editorConfig: AngularEditorConfig = {
+    editable: true,
+    spellcheck: true,
+    height: '250px',
+    minHeight: '0',
+    maxHeight: 'auto',
+    width: 'auto',
+    minWidth: '0',
+    enableToolbar: true,
+    showToolbar: true,
+    translate: 'no',
+    placeholder: 'Write the page content here...',
+    defaultParagraphSeparator: 'p',
+    defaultFontName: 'Arial',
+    defaultFontSize: '3',
+
+    fonts: [
+      { class: 'arial', name: 'Arial' },
+      { class: 'times-new-roman', name: 'Times New Roman' },
+      { class: 'calibri', name: 'Calibri' },
+      { class: 'comic-sans-ms', name: 'Comic Sans MS' },
+      { class: 'verdana', name: 'Verdana' },
+    ],
+
+    toolbarHiddenButtons: [
+      [
+        // example: 'insertVideo', 'strikeThrough'
+      ],
+    ],
+  };
 
   constructor(private http: HttpClient) {}
 
@@ -104,7 +139,7 @@ export class PagesComponent implements OnInit {
       (p.title || '').toLowerCase().includes(t) ||
       (p.slug || '').toLowerCase().includes(t) ||
       (p.description || '').toLowerCase().includes(t) ||
-      (p.content || '').toLowerCase().includes(t) ||
+      this.stripHtml(p.content || '').toLowerCase().includes(t) ||
       (p.category || '').toLowerCase().includes(t)
     );
   }
@@ -208,7 +243,7 @@ export class PagesComponent implements OnInit {
     this.showPreviewModal = false;
   }
 
-  // ⭐ NEW: DELETE CURRENT EDITED PAGE
+  // DELETE CURRENT EDITED PAGE
   deletePage(): void {
     if (!this.editPageObj.id) {
       return;
@@ -226,7 +261,6 @@ export class PagesComponent implements OnInit {
 
     this.http.delete(`${this.apiUrl}/${this.editPageObj.id}`).subscribe({
       next: () => {
-        // remove from arrays
         this.pages = this.pages.filter(p => p.id !== this.editPageObj.id);
         this.filteredPages = this.filteredPages.filter(
           p => p.id !== this.editPageObj.id
@@ -241,5 +275,12 @@ export class PagesComponent implements OnInit {
         alert('Failed to delete page.');
       },
     });
+  }
+
+  // same as banner/posts
+  stripHtml(html: string): string {
+    const div = document.createElement('div');
+    div.innerHTML = html || '';
+    return div.textContent || div.innerText || '';
   }
 }

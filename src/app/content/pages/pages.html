@@ -27,15 +27,25 @@
 <!-- PAGES GRID -->
 <div class="posts-grid" *ngIf="filteredPages.length > 0">
   <div class="post-card" *ngFor="let page of filteredPages">
-    <div class="thumbnail"></div>
+
+    <!-- ⭐ THUMBNAIL / FEATURED IMAGE -->
+    <div class="thumbnail">
+      <img
+        *ngIf="page.featuredImage"
+        [src]="page.featuredImage"
+        [alt]="page.title"
+      />
+    </div>
 
     <h3>{{ page.title }}</h3>
     <p class="slug">/{{ page.slug }}</p>
     <p class="description">{{ page.description }}</p>
 
-    <p class="content-preview">
-      {{ page.content | slice: 0: 160
-      }}<span *ngIf="page.content && page.content.length > 160">…</span>
+    <p class="content-preview" *ngIf="page.content">
+      {{
+        stripHtml(page.content) | slice: 0: 160
+      }}
+      <span *ngIf="stripHtml(page.content).length > 160">…</span>
     </p>
 
     <div class="footer">
@@ -77,7 +87,11 @@
 
       <div class="form-row">
         <label>Content</label>
-        <textarea rows="8" [(ngModel)]="newPage.content"></textarea>
+        <angular-editor
+          [(ngModel)]="newPage.content"
+          name="newPageContent"
+          [config]="editorConfig"
+        ></angular-editor>
       </div>
 
       <div class="form-row">
@@ -154,7 +168,11 @@
 
       <div class="form-row">
         <label>Content</label>
-        <textarea rows="8" [(ngModel)]="editPageObj.content"></textarea>
+        <angular-editor
+          [(ngModel)]="editPageObj.content"
+          name="editPageContent"
+          [config]="editorConfig"
+        ></angular-editor>
       </div>
 
       <div class="form-row">
@@ -197,7 +215,7 @@
     </div>
 
     <div class="modal-footer">
-      <!-- ⭐ NEW: DELETE BUTTON (only if editing existing page) -->
+      <!-- DELETE BUTTON (only if editing existing page) -->
       <button
         class="btn-danger"
         *ngIf="editPageObj.id"
@@ -238,9 +256,12 @@
 
       <p class="preview-description">{{ p.description }}</p>
 
-      <div class="preview-content">
-        {{ p.content }}
+      <!-- ⭐ FEATURED IMAGE IN PREVIEW -->
+      <div *ngIf="p.featuredImage" class="preview-image-wrapper">
+        <img [src]="p.featuredImage" [alt]="p.title" class="preview-image" />
       </div>
+
+      <div class="preview-content" [innerHTML]="p.content"></div>
 
       <div class="preview-seo">
         <p *ngIf="p.author">

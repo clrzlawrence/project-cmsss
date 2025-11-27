@@ -79,7 +79,7 @@ export class BannersComponent implements OnInit {
     // example: pwede nimo i-hide uban buttons kung ganahan ka
     toolbarHiddenButtons: [
       [
-          'undo', 'redo'   // 'insertVideo', 'strikeThrough', 'subscript', 'superscript'
+             // 'insertVideo', 'strikeThrough', 'subscript', 'superscript'
       ]
     ]
   };

@@ -140,15 +140,14 @@
     </div>
 
     <!-- CONTENT EDITOR -->
-    <label>
+        <span>
       Content
       <angular-editor
         [(ngModel)]="newBanner.content"
         name="content"
         [config]="editorConfig"
-        (focus)="onEditorFocus($event)"
       ></angular-editor>
-    </label>
+    </span>
 
     <!-- Actions -->
     <div class="modal-actions">

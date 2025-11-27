@@ -33,7 +33,7 @@
   padding: 16px 18px;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
   display: flex;
-  flex-direction: column;              /* 🔥 important */
+  flex-direction: column;
   gap: 10px;
   border: 1px solid #d1d5db;
   transition: transform 0.15s ease, box-shadow 0.15s ease, border-color 0.15s ease;
@@ -82,7 +82,7 @@ h3 {
 
 /* ⭐ FOOTER always at bottom of card ⭐ */
 .footer {
-  margin-top: auto;                    /* 🔥 push to bottom */
+  margin-top: auto;
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -132,6 +132,24 @@ h3 {
 
   &:hover {
     background-color: #000000;
+  }
+}
+
+/* 🔴 delete button */
+.btn-danger {
+  font-size: 12px;
+  padding: 6px 10px;
+  border-radius: 999px;
+  border: 1px solid #b91c1c;
+  background: transparent;
+  color: #b91c1c;
+  cursor: pointer;
+  transition: background-color 0.15s ease, color 0.15s ease, border-color 0.15s ease;
+
+  &:hover {
+    background-color: #b91c1c;
+    color: #ffffff;
+    border-color: #b91c1c;
   }
 }
 
@@ -220,6 +238,22 @@ h3 {
     font-size: 13px;
     resize: vertical;
   }
+
+  /* ⭐ AngularEditor styles */
+  angular-editor {
+    width: 100%;
+  }
+
+  .angular-editor-toolbar,
+  .angular-editor-textarea {
+    border-radius: 10px;
+    border: 1px solid #d1d5db;
+  }
+
+  .angular-editor-textarea {
+    min-height: 160px;
+    font-size: 13px;
+  }
 }
 
 /* Optional: small screen adjustments */
@@ -250,7 +284,8 @@ h3 {
     font-size: 14px;
     color: #374151;
     line-height: 1.6;
-    white-space: pre-line; // para respetohon ang line breaks sa text
+    /* HTML na ni, so normal white-space */
+    white-space: normal;
   }
 }
 
