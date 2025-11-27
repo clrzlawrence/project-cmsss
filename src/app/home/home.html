@@ -10,7 +10,14 @@
         <div class="activity-icon">
           <img [src]="item.icon" alt="icon" />
         </div>
-        <div class="activity-text">{{ item.text }}</div>
+
+        <!-- ⭐ clickable blue text -->
+        <div class="activity-text">
+          <button class="activity-link" (click)="goToItem(item)">
+            {{ item.text }}
+          </button>
+        </div>
+
         <div class="activity-user">{{ item.user }}</div>
         <div class="activity-time">{{ item.time }}</div>
       </div>

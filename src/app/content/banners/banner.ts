@@ -9,6 +9,9 @@ import { MatInputModule } from '@angular/material/input';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatNativeDateModule } from '@angular/material/core';
 
+// for ?editId=
+import { ActivatedRoute } from '@angular/router';
+
 // Angular Editor
 import { AngularEditorModule, AngularEditorConfig } from '@kolkov/angular-editor';
 
@@ -18,7 +21,7 @@ import { AngularEditorModule, AngularEditorConfig } from '@kolkov/angular-editor
   imports: [
     CommonModule,
     FormsModule,
-    AngularEditorModule,   // ⭐ EDITOR MODULE
+    AngularEditorModule,
     MatFormFieldModule,
     MatInputModule,
     MatDatepickerModule,
@@ -51,7 +54,10 @@ export class BannersComponent implements OnInit {
     content: ''
   };
 
-  // ⭐ ANGULAR EDITOR CONFIG (WordPress-style toolbar)
+  // highlight support
+  private pendingEditId: string | null = null;
+  highlightId: string | null = null;
+
   editorConfig: AngularEditorConfig = {
     editable: true,
     spellcheck: true,
@@ -66,8 +72,7 @@ export class BannersComponent implements OnInit {
     placeholder: 'Write the banner content here...',
     defaultParagraphSeparator: 'p',
     defaultFontName: 'Arial',
-    defaultFontSize: '3', // 1–7 (HTML font size)
-
+    defaultFontSize: '3',
     fonts: [
       { class: 'arial', name: 'Arial' },
       { class: 'times-new-roman', name: 'Times New Roman' },
@@ -75,30 +80,31 @@ export class BannersComponent implements OnInit {
       { class: 'comic-sans-ms', name: 'Comic Sans MS' },
       { class: 'verdana', name: 'Verdana' }
     ],
-    
-    // example: pwede nimo i-hide uban buttons kung ganahan ka
-    toolbarHiddenButtons: [
-      [
-             // 'insertVideo', 'strikeThrough', 'subscript', 'superscript'
-      ]
-    ]
+    toolbarHiddenButtons: [[]]
   };
 
-  // date + time controls
   publishDate: Date | null = null;
-  publishTime: string = '09:00 AM';
+  publishTime = '09:00 AM';
 
   expireDate: Date | null = null;
-  expireTime: string = '05:00 PM';
+  expireTime = '05:00 PM';
 
   timeOptions: string[] = [];
 
   private apiUrl = 'https://localhost:7090/api/Banners';
 
-  constructor(private http: HttpClient) {}
+  constructor(
+    private http: HttpClient,
+    private route: ActivatedRoute
+  ) {}
 
   ngOnInit(): void {
     this.generateTimes();
+
+    this.route.queryParamMap.subscribe(params => {
+      this.pendingEditId = params.get('editId');
+    });
+
     this.loadBanners();
   }
 
@@ -123,11 +129,10 @@ export class BannersComponent implements OnInit {
   }
 
   onEditorFocus(event: any) {
-  // Disable the auto-undo behavior
-  if (event?.editor && event.editor.undoManager) {
-    event.editor.undoManager.clear();
+    if (event?.editor && event.editor.undoManager) {
+      event.editor.undoManager.clear();
+    }
   }
-}
 
   loadBanners() {
     this.http.get<any[]>(this.apiUrl).subscribe({
@@ -135,6 +140,15 @@ export class BannersComponent implements OnInit {
         const now = new Date();
         this.banners = data.filter(b => !b.expireAt || new Date(b.expireAt) > now);
         this.isLoading = false;
+
+        // apply highlight if navigated from Latest Activity
+        if (this.pendingEditId) {
+          const banner = this.banners.find(b => b.id === this.pendingEditId);
+          if (banner?.id) {
+            this.highlightId = banner.id;
+            setTimeout(() => { this.highlightId = null; }, 1200);
+          }
+        }
       },
       error: (err) => {
         console.error(err);

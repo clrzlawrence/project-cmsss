@@ -1,10 +1,10 @@
 .home-content {
   padding: 20px;
-  flex: 1; // fill remaining space in MainLayout
+  flex: 1;
   display: flex;
   flex-direction: column;
   gap: 30px;
-  overflow-y: auto; // scroll if content is tall
+  overflow-y: auto;
 
   .cards-row {
     display: flex;
@@ -18,10 +18,10 @@
   }
 
   .latest-activity-card {
-  background-color: #fff;
-  padding: 20px;
-  border-radius: 16px;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    background-color: #fff;
+    padding: 20px;
+    border-radius: 16px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
 
     h3 {
       margin-bottom: 15px;
@@ -30,47 +30,63 @@
     }
 
     .activity-content {
-    display: flex;
-    flex-direction: column;
-    gap: 15px; // invisible spacing between items
-    max-height: 300px; // limit height
-    overflow: hidden;  // hide extra content
-  }
+      display: flex;
+      flex-direction: column;
+      gap: 15px;
+      max-height: 300px;
+      overflow: hidden;
+    }
 
-      .activity-item {
-        display: flex;
-        align-items: center;
-        padding: 8px 0;
-        border-bottom: 1px solid #e0e0e0;
-        gap: 10px;
+    .activity-item {
+      display: flex;
+      align-items: center;
+      padding: 8px 0;
+      border-bottom: 1px solid #e0e0e0;
+      gap: 10px;
 
-        &:last-child {
-          border-bottom: none;
+      &:last-child {
+        border-bottom: none;
+      }
+
+      .activity-icon {
+        img {
+          width: 24px;
+          height: 24px;
+          object-fit: contain;
         }
+      }
 
-        .activity-icon {
-          img {
-            width: 24px;
-            height: 24px;
-            object-fit: contain;
-          }
-        }
+      .activity-text {
+        flex: 1;
+        color: #555;
+      }
 
-        .activity-text {
-          flex: 1;
-          color: #555;
-        }
+      /* ⭐ blue clickable text, no default button style */
+      .activity-link {
+        padding: 0;
+        margin: 0;
+        border: none;
+        background: transparent;
+        color: #2563eb;
+        cursor: pointer;
+        font: inherit;
+        text-align: left;
 
-        .activity-user {
-          font-weight: 500;
-          color: #222;
-          margin-right: 10px;
+        &:hover {
+          text-decoration: underline;
         }
+      }
 
-        .activity-time {
-          color: #888;
-          font-size: 0.85rem;
-        }
+      .activity-user {
+        font-weight: 500;
+        color: #222;
+        margin-right: 10px;
+      }
+
+      .activity-time {
+        color: #888;
+        font-size: 0.85rem;
       }
     }
   }
+}

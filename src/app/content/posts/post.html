@@ -25,7 +25,11 @@
 
 <!-- POSTS GRID -->
 <div class="posts-grid" *ngIf="filteredPosts.length > 0">
-  <div class="post-card" *ngFor="let post of filteredPosts">
+  <div
+    class="post-card"
+    *ngFor="let post of filteredPosts"
+    [ngClass]="{ 'highlight-card': post.id === highlightId }"
+  >
     <div class="thumbnail"></div>
 
     <h3>{{ post.title }}</h3>
@@ -33,13 +37,10 @@
     <p class="description">{{ post.description }}</p>
 
     <p class="content-preview" *ngIf="post.content">
-      {{
-        stripHtml(post.content) | slice: 0: 160
-      }}
+      {{ stripHtml(post.content) | slice: 0: 160 }}
       <span *ngIf="stripHtml(post.content).length > 160">…</span>
     </p>
 
-    <!-- ⭐ FOOTER = pirme sa pinakailalom sa card ⭐ -->
     <div class="footer">
       <span class="status" [class.published]="post.status === 'published'">
         {{ post.status | titlecase }}
@@ -147,7 +148,6 @@
     </div>
 
     <div class="modal-footer">
-      <!-- 🔴 DELETE only if existing post -->
       <button
         class="btn-danger"
         *ngIf="editPost.id"
@@ -166,7 +166,6 @@
     </div>
   </div>
 </div>
-
 
 <!-- ========== PREVIEW MODAL ========== -->
 <div class="modal-backdrop" *ngIf="showPreviewModal">

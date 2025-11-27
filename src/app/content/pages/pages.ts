@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { HttpClient } from '@angular/common/http';
 import { FormsModule } from '@angular/forms';
+import { ActivatedRoute } from '@angular/router';
 
 // Angular Editor
 import { AngularEditorModule, AngularEditorConfig } from '@kolkov/angular-editor';
@@ -49,6 +50,12 @@ export class PagesComponent implements OnInit {
 
   private readonly apiUrl = 'https://localhost:7090/api/Pages';
 
+  // gikan sa ?editId= sa URL (Latest Activity)
+  private pendingEditId: string | null = null;
+
+  // para ma-assign ang animation sa sakto nga card
+  highlightId: string | null = null;
+
   // MAIN PAGE / SECTION OPTIONS
   mainPageOptions: string[] = [
     'Home',
@@ -91,9 +98,17 @@ export class PagesComponent implements OnInit {
     ],
   };
 
-  constructor(private http: HttpClient) {}
+  constructor(
+    private http: HttpClient,
+    private route: ActivatedRoute
+  ) {}
 
   ngOnInit(): void {
+    // basaha ang ?editId= kung naa
+    this.route.queryParamMap.subscribe(params => {
+      this.pendingEditId = params.get('editId');
+    });
+
     this.loadPages();
   }
 
@@ -122,6 +137,19 @@ export class PagesComponent implements OnInit {
         this.pages = data;
         this.filteredPages = data;
         this.isLoading = false;
+
+        // kung gikan sa Latest Activity, i-highlight lang ang card
+        if (this.pendingEditId) {
+          const p = this.pages.find(x => x.id === this.pendingEditId);
+          if (p && p.id) {
+            this.highlightId = p.id;
+
+            // tangtangon highlight after 1.2s
+            setTimeout(() => {
+              this.highlightId = null;
+            }, 1200);
+          }
+        }
       },
       error: err => {
         console.error(err);

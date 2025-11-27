@@ -20,7 +20,11 @@
 
 <!-- Banners Grid -->
 <div class="banners-grid" *ngIf="!isLoading && banners.length > 0">
-  <div class="banner-card" *ngFor="let b of banners">
+  <div
+    class="banner-card"
+    *ngFor="let b of banners"
+    [ngClass]="{ 'highlight-card': b.id === highlightId }"
+  >
 
     <img [src]="b.imageUrl" alt="Banner" class="banner-img" />
 
@@ -140,7 +144,7 @@
     </div>
 
     <!-- CONTENT EDITOR -->
-        <span>
+    <span>
       Content
       <angular-editor
         [(ngModel)]="newBanner.content"

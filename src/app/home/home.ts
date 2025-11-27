@@ -3,7 +3,7 @@ import { CommonModule } from '@angular/common';
 import { HttpClient } from '@angular/common/http';
 import { Widget } from './widgets/widget.model';
 import { WidgetComponent } from './widgets/widgets';
-import { Router } from '@angular/router';   // ⭐ ADD THIS
+import { Router } from '@angular/router';
 
 interface ActivityLogEntry {
   timestamp: string;
@@ -19,6 +19,16 @@ interface ArchivesCountResponse {
   total: number;
   banners: number;
   pages: number;
+}
+
+// UI item (para ma-store nato ang contentType + contentId)
+interface UiActivityItem {
+  text: string;
+  user: string;
+  time: string;
+  icon: string;
+  contentType: string;
+  contentId: string;
 }
 
 @Component({
@@ -58,11 +68,10 @@ export class Home implements OnInit {
   ];
 
   // ───────────── LATEST ACTIVITY (from API) ─────────────
-  latestActivity: { text: string; user: string; time: string; icon: string }[] = [];
+  latestActivity: UiActivityItem[] = [];
 
   private activityApiUrl = 'https://localhost:7090/api/ActivityLogs';
 
-  // ⭐ CHANGED: add Router here
   constructor(private http: HttpClient, private router: Router) {}
 
   ngOnInit(): void {
@@ -101,7 +110,7 @@ export class Home implements OnInit {
       });
   }
 
-  // ⭐ NEW: called by the "View" button sa Archives card
+  // optional
   goToArchives(): void {
     this.router.navigate(['/content/archives']);
   }
@@ -117,6 +126,8 @@ export class Home implements OnInit {
           user: entry.userName,
           time: this.formatTimeAgo(entry.timestamp),
           icon: this.getIcon(entry.action),
+          contentType: entry.contentType,
+          contentId: entry.contentId,
         }));
       },
       error: (err) => {
@@ -160,5 +171,23 @@ export class Home implements OnInit {
     if (text.includes('delete')) return 'assets/icons/delete.svg';
     if (text.includes('publish')) return 'assets/icons/ok.svg';
     return 'assets/icons/info.svg';
+  }
+
+  // ⭐ CLICK HANDLER: jump to correct page/post/banner
+  goToItem(item: UiActivityItem): void {
+    if (!item.contentType || !item.contentId) {
+      return;
+    }
+
+    const type = item.contentType.toLowerCase();
+    const id = item.contentId;
+
+    if (type === 'page') {
+      this.router.navigate(['/content/pages'], { queryParams: { editId: id } });
+    } else if (type === 'post') {
+      this.router.navigate(['/content/posts'], { queryParams: { editId: id } });
+    } else if (type === 'banner') {
+      this.router.navigate(['/content/banners'], { queryParams: { editId: id } });
+    }
   }
 }

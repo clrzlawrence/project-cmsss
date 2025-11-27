@@ -2,8 +2,8 @@ import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { HttpClient } from '@angular/common/http';
 import { FormsModule } from '@angular/forms';
+import { ActivatedRoute } from '@angular/router';
 
-// Angular Editor
 import { AngularEditorModule, AngularEditorConfig } from '@kolkov/angular-editor';
 
 interface Post {
@@ -12,7 +12,7 @@ interface Post {
   slug: string;
   description: string;
   content: string;
-  status: string; // draft | published
+  status: string;
 }
 
 @Component({
@@ -31,7 +31,6 @@ export class PostsComponent implements OnInit {
   isLoading = true;
   error: string | null = null;
 
-  // modal states
   showNewModal = false;
   showEditModal = false;
   showPreviewModal = false;
@@ -42,23 +41,17 @@ export class PostsComponent implements OnInit {
   editPost: Post = this.emptyPost();
   previewPost: Post | null = null;
 
-  // ⭐ same style as banner editor
+  private pendingEditId: string | null = null;
+  highlightId: string | null = null;
+
   editorConfig: AngularEditorConfig = {
     editable: true,
     spellcheck: true,
     height: '250px',
-    minHeight: '0',
-    maxHeight: 'auto',
-    width: 'auto',
-    minWidth: '0',
     enableToolbar: true,
     showToolbar: true,
-    translate: 'no',
     placeholder: 'Write the post content here...',
     defaultParagraphSeparator: 'p',
-    defaultFontName: 'Arial',
-    defaultFontSize: '3',
-
     fonts: [
       { class: 'arial', name: 'Arial' },
       { class: 'times-new-roman', name: 'Times New Roman' },
@@ -66,43 +59,42 @@ export class PostsComponent implements OnInit {
       { class: 'comic-sans-ms', name: 'Comic Sans MS' },
       { class: 'verdana', name: 'Verdana' },
     ],
-
-    toolbarHiddenButtons: [
-      [
-        // example: 'insertVideo', 'strikeThrough'
-      ],
-    ],
   };
 
   private readonly apiUrl = 'https://localhost:7090/api/Posts';
 
-  constructor(private http: HttpClient) {}
+  constructor(private http: HttpClient, private route: ActivatedRoute) {}
 
   ngOnInit(): void {
+    this.route.queryParamMap.subscribe(params => {
+      this.pendingEditId = params.get('editId');
+    });
+
     this.loadPosts();
   }
 
   private emptyPost(): Post {
-    return {
-      title: '',
-      slug: '',
-      description: '',
-      content: '',
-      status: 'draft',
-    };
+    return { title: '', slug: '', description: '', content: '', status: 'draft' };
   }
 
-  // Load Posts from API
   loadPosts(): void {
     this.isLoading = true;
 
     this.http.get<Post[]>(this.apiUrl).subscribe({
-      next: (data) => {
+      next: data => {
         this.posts = data;
         this.filteredPosts = data;
         this.isLoading = false;
+
+        if (this.pendingEditId) {
+          const post = this.posts.find(x => x.id === this.pendingEditId);
+          if (post?.id) {
+            this.highlightId = post.id;
+            setTimeout(() => (this.highlightId = null), 1200);
+          }
+        }
       },
-      error: (err) => {
+      error: err => {
         console.error(err);
         this.error = 'Failed to load posts.';
         this.isLoading = false;
@@ -110,19 +102,17 @@ export class PostsComponent implements OnInit {
     });
   }
 
-  // Search Function
   onSearchChange(): void {
     const t = this.searchTerm.toLowerCase();
-
-    this.filteredPosts = this.posts.filter((p) =>
-      (p.title || '').toLowerCase().includes(t) ||
-      (p.slug || '').toLowerCase().includes(t) ||
-      (p.description || '').toLowerCase().includes(t) ||
-      this.stripHtml(p.content || '').toLowerCase().includes(t)
+    this.filteredPosts = this.posts.filter(
+      p =>
+        p.title?.toLowerCase().includes(t) ||
+        p.slug?.toLowerCase().includes(t) ||
+        p.description?.toLowerCase().includes(t) ||
+        this.stripHtml(p.content || '').toLowerCase().includes(t)
     );
   }
 
-  // ========== NEW POST ==========
   openNewModal(): void {
     this.newPost = this.emptyPost();
     this.showNewModal = true;
@@ -133,86 +123,66 @@ export class PostsComponent implements OnInit {
   }
 
   saveNewPost(): void {
-    if (!this.newPost.title || !this.newPost.slug) {
-      alert('Title and slug are required.');
-      return;
-    }
+    if (!this.newPost.title || !this.newPost.slug) return;
 
     this.isSaving = true;
 
     this.http.post<Post>(this.apiUrl, this.newPost).subscribe({
-      next: (created) => {
-        this.posts = [created, ...this.posts];
+      next: created => {
+        this.posts.unshift(created);
         this.filteredPosts = [...this.posts];
         this.isSaving = false;
         this.showNewModal = false;
       },
-      error: (err) => {
+      error: err => {
         console.error(err);
         this.isSaving = false;
-        alert('Failed to save post.');
       },
     });
   }
 
-  // ========== EDIT ==========
   openEditModal(post: Post): void {
     this.editPost = { ...post };
     this.showEditModal = true;
   }
 
   closeEditModal(): void {
-    if (this.isSaving) return;
     this.showEditModal = false;
   }
 
   saveEditPost(): void {
     if (!this.editPost.id) return;
-
     this.isSaving = true;
 
     this.http.put(`${this.apiUrl}/${this.editPost.id}`, this.editPost).subscribe({
       next: () => {
-        const i = this.posts.findIndex((p) => p.id === this.editPost.id);
-        if (i !== -1) this.posts[i] = { ...this.editPost };
+        const idx = this.posts.findIndex(p => p.id === this.editPost.id);
+        if (idx !== -1) this.posts[idx] = { ...this.editPost };
         this.filteredPosts = [...this.posts];
         this.isSaving = false;
         this.showEditModal = false;
       },
-      error: (err) => {
+      error: err => {
         console.error(err);
         this.isSaving = false;
-        alert('Failed to update post.');
       },
     });
   }
 
-  // ========== DELETE (from Edit modal) ==========
   deletePost(): void {
     if (!this.editPost.id) return;
-
-    const ok = confirm(`Delete post "${this.editPost.title}"?`);
-    if (!ok) return;
-
-    this.isSaving = true;
+    if (!confirm(`Delete post "${this.editPost.title}"?`)) return;
 
     this.http.delete(`${this.apiUrl}/${this.editPost.id}`).subscribe({
       next: () => {
         this.posts = this.posts.filter(p => p.id !== this.editPost.id);
         this.filteredPosts = [...this.posts];
-        this.isSaving = false;
         this.showEditModal = false;
-        this.editPost = this.emptyPost();
       },
-      error: err => {
-        console.error(err);
-        this.isSaving = false;
-        alert('Failed to delete post.');
-      }
+      error: err => console.error(err),
     });
   }
 
-  // ========== PREVIEW ==========
   openPreview(post: Post): void {
     this.previewPost = post;
     this.showPreviewModal = true;
@@ -223,10 +193,9 @@ export class PostsComponent implements OnInit {
     this.showPreviewModal = false;
   }
 
-  // same idea as banner.stripHtml
   stripHtml(html: string): string {
-    const div = document.createElement('div');
-    div.innerHTML = html || '';
-    return div.textContent || div.innerText || '';
+    const d = document.createElement('div');
+    d.innerHTML = html || '';
+    return d.textContent || '';
   }
 }

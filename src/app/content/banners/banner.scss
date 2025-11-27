@@ -2,7 +2,7 @@
 
 .contents-header {
   display: flex;
-  justify-content: flex-start;  /* ⭐ heading only, no space-between */
+  justify-content: flex-start;
   align-items: center;
   margin-bottom: 8px;
 
@@ -12,7 +12,7 @@
   }
 }
 
-/* ⭐ new row for button, left aligned */
+/* new row for button, left aligned */
 .sub-header-row {
   display: flex;
   justify-content: flex-start;
@@ -192,7 +192,6 @@
       min-height: 80px;
     }
 
-    /* ⭐ ADDED FOR QUILL EDITOR */
     .ql-toolbar,
     .ql-container {
       border-radius: 8px;
@@ -293,7 +292,7 @@
   color: #111827;
 }
 
-/* DATETIME ROW (Material date + time) */
+/* DATETIME ROW */
 
 .datetime-row {
   display: flex;
@@ -307,4 +306,28 @@
 
 .time-field {
   width: 150px;
+}
+
+/* ⭐ highlight pulse for card */
+.highlight-card {
+  animation: card-pulse 0.8s ease-out;
+}
+
+@keyframes card-pulse {
+  0% {
+    transform: scale(1);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+  }
+  30% {
+    transform: scale(1.03);
+    box-shadow: 0 10px 24px rgba(0, 0, 0, 0.16);
+  }
+  60% {
+    transform: scale(1.01);
+    box-shadow: 0 6px 18px rgba(0, 0, 0, 0.1);
+  }
+  100% {
+    transform: scale(1);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+  }
 }

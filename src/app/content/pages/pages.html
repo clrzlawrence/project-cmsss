@@ -26,9 +26,13 @@
 
 <!-- PAGES GRID -->
 <div class="posts-grid" *ngIf="filteredPages.length > 0">
-  <div class="post-card" *ngFor="let page of filteredPages">
+  <div
+    class="post-card"
+    *ngFor="let page of filteredPages"
+    [ngClass]="{ 'highlight-card': page.id === highlightId }"
+  >
 
-    <!-- ⭐ THUMBNAIL / FEATURED IMAGE -->
+    <!-- THUMBNAIL / FEATURED IMAGE -->
     <div class="thumbnail">
       <img
         *ngIf="page.featuredImage"
@@ -42,9 +46,7 @@
     <p class="description">{{ page.description }}</p>
 
     <p class="content-preview" *ngIf="page.content">
-      {{
-        stripHtml(page.content) | slice: 0: 160
-      }}
+      {{ stripHtml(page.content) | slice: 0: 160 }}
       <span *ngIf="stripHtml(page.content).length > 160">…</span>
     </p>
 
@@ -256,7 +258,7 @@
 
       <p class="preview-description">{{ p.description }}</p>
 
-      <!-- ⭐ FEATURED IMAGE IN PREVIEW -->
+      <!-- FEATURED IMAGE IN PREVIEW -->
       <div *ngIf="p.featuredImage" class="preview-image-wrapper">
         <img [src]="p.featuredImage" [alt]="p.title" class="preview-image" />
       </div>
