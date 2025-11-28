@@ -1,9 +1,9 @@
-/* Header row (title + New Post button) */
+/* ========== HEADER ========== */
 .header-row {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  margin-bottom: 4px;
+  margin-bottom: 12px;
 
   h2 {
     margin: 0;
@@ -19,7 +19,25 @@
   margin-bottom: 14px;
 }
 
-/* GRID + CARD STYLES */
+/* pill/curve style search box */
+.search-box {
+  padding: 8px 16px;
+  width: 240px;
+  border-radius: 999px;
+  border: 1px solid #d1d5db;
+  background: #f9fafb;
+  font-size: 14px;
+  outline: none;
+  transition: 0.15s ease;
+
+  &:focus {
+    border-color: #111827;
+    background: #ffffff;
+    box-shadow: 0 0 0 2px rgba(17, 24, 39, 0.1);
+  }
+}
+
+/* ========== GRID + CARD STYLES ========== */
 .posts-grid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
@@ -36,12 +54,22 @@
   flex-direction: column;
   gap: 10px;
   border: 1px solid #d1d5db;
-  transition: transform 0.15s ease, box-shadow 0.15s ease, border-color 0.15s ease;
+  transition:
+    transform 0.15s ease,
+    box-shadow 0.15s ease,
+    border-color 0.15s ease;
 
   &:hover {
     transform: translateY(-2px);
     border-color: #9ca3af;
     box-shadow: 0 6px 18px rgba(0, 0, 0, 0.08);
+  }
+
+  h3 {
+    font-size: 16px;
+    font-weight: 600;
+    margin: 0;
+    color: #111827;
   }
 }
 
@@ -51,13 +79,6 @@
   border-radius: 10px;
   background: linear-gradient(135deg, #f3f4f6, #e5e7eb);
   margin-bottom: 4px;
-}
-
-h3 {
-  font-size: 16px;
-  font-weight: 600;
-  margin: 0;
-  color: #111827;
 }
 
 .slug {
@@ -79,18 +100,18 @@ h3 {
   margin: 4px 0 0 0;
   line-height: 1.5;
 
-  /* FIXED: para dili molapas ang long words */
+  /* para dili molapas ang long words */
   word-break: break-word;
   overflow-wrap: break-word;
 
-  /* OPTIONAL clamping */
+  /* clamp to 3 lines */
   display: -webkit-box;
   -webkit-line-clamp: 3;
   -webkit-box-orient: vertical;
   overflow: hidden;
 }
 
-/* FOOTER */
+/* footer always at bottom */
 .footer {
   margin-top: auto;
   display: flex;
@@ -118,7 +139,7 @@ h3 {
   gap: 8px;
 }
 
-/* BUTTONS */
+/* ========== BUTTONS (shared) ========== */
 .btn-outline,
 .btn-dark {
   font-size: 12px;
@@ -128,7 +149,10 @@ h3 {
   background: transparent;
   color: #111827;
   cursor: pointer;
-  transition: background-color 0.15s ease, color 0.15s ease, border-color 0.15s ease;
+  transition:
+    background-color 0.15s ease,
+    color 0.15s ease,
+    border-color 0.15s ease;
 
   &:hover {
     background-color: #111827;
@@ -145,6 +169,7 @@ h3 {
   }
 }
 
+/* Delete button (red) */
 .btn-danger {
   font-size: 12px;
   padding: 6px 10px;
@@ -153,7 +178,10 @@ h3 {
   background: transparent;
   color: #b91c1c;
   cursor: pointer;
-  transition: background-color 0.15s ease, color 0.15s ease, border-color 0.15s ease;
+  transition:
+    background-color 0.15s ease,
+    color 0.15s ease,
+    border-color 0.15s ease;
 
   &:hover {
     background-color: #b91c1c;
@@ -168,27 +196,138 @@ h3 {
   margin-top: 8px;
 }
 
-/* MODAL styles omitted here (same as yours) ... */
+/* ========== MODAL STYLES (New / Edit / Preview) ========== */
 
-/* SEARCH BOX */
-.search-box {
-  padding: 8px 16px;
-  width: 240px;
-  border-radius: 999px;
-  border: 1px solid #d1d5db;
-  background: #f9fafb;
-  font-size: 14px;
-  outline: none;
-  transition: 0.15s ease;
+.modal-backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(15, 23, 42, 0.45);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 50;
+}
 
-  &:focus {
-    border-color: #111827;
-    background: #ffffff;
-    box-shadow: 0 0 0 2px rgba(17, 24, 39, 0.1);
+.modal {
+  background: #ffffff;
+  border-radius: 16px;
+  width: min(900px, 90vw);
+  max-height: 90vh;
+  display: flex;
+  flex-direction: column;
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.25);
+}
+
+.modal-header {
+  padding: 16px 20px;
+  border-bottom: 1px solid #e5e7eb;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  h3 {
+    margin: 0;
+    font-size: 18px;
+    font-weight: 600;
   }
 }
 
-/* HIGHLIGHT animation */
+.close-btn {
+  border: none;
+  background: transparent;
+  font-size: 22px;
+  line-height: 1;
+  cursor: pointer;
+}
+
+.modal-body {
+  padding: 16px 20px;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.modal-footer {
+  padding: 12px 20px 16px;
+  border-top: 1px solid #e5e7eb;
+  display: flex;
+  justify-content: flex-end;
+  gap: 8px;
+}
+
+.form-row {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+
+  label {
+    font-size: 12px;
+    color: #4b5563;
+  }
+
+  input,
+  textarea,
+  select {
+    padding: 8px 10px;
+    border-radius: 10px;
+    border: 1px solid #d1d5db;
+    font-size: 13px;
+    resize: vertical;
+  }
+
+  /* AngularEditor styles */
+  angular-editor {
+    width: 100%;
+  }
+
+  .angular-editor-toolbar,
+  .angular-editor-textarea {
+    border-radius: 10px;
+    border: 1px solid #d1d5db;
+  }
+
+  .angular-editor-textarea {
+    min-height: 160px;
+    font-size: 13px;
+  }
+}
+
+/* Preview extra styles */
+.preview-body {
+  .preview-meta {
+    font-size: 13px;
+    color: #6b7280;
+    margin-bottom: 8px;
+  }
+
+  .preview-description {
+    font-size: 14px;
+    font-weight: 500;
+    margin-bottom: 12px;
+  }
+
+  .preview-content {
+    font-size: 14px;
+    color: #374151;
+    line-height: 1.6;
+    white-space: normal;
+  }
+}
+
+/* Responsive */
+@media (max-width: 640px) {
+  .posts-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .modal {
+    width: 95vw;
+  }
+}
+
+/* ========== HIGHLIGHT (pulse) ========== */
+
 .highlight-card {
   animation: card-pulse 0.8s ease-out;
 }
