@@ -48,3 +48,11 @@ body {
 }
 
 /* (Removed all .ql-* styles for Quill – wala na nato gigamit) */
+
+angular-editor .angular-editor-textarea img,
+.preview-content img {
+  max-width: 100%;
+  height: auto;
+  display: block;
+  margin: 10px auto;
+}

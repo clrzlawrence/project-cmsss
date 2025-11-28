@@ -41,6 +41,18 @@
       <span *ngIf="stripHtml(post.content).length > 160">…</span>
     </p>
 
+    <!-- ⭐ DATE ABOVE BUTTONS -->
+    <p class="meta-date" *ngIf="post.publishedAt; else createdInfo">
+      Published: {{ post.publishedAt | date: 'MMM d, y' }}
+    </p>
+
+    <ng-template #createdInfo>
+      <p class="meta-date" *ngIf="post.createdAt">
+        Created: {{ post.createdAt | date: 'MMM d, y' }}
+      </p>
+    </ng-template>
+
+    <!-- FOOTER: status + buttons -->
     <div class="footer">
       <span class="status" [class.published]="post.status === 'published'">
         {{ post.status | titlecase }}
@@ -53,6 +65,7 @@
     </div>
   </div>
 </div>
+
 
 <!-- ========== NEW POST MODAL ========== -->
 <div class="modal-backdrop" *ngIf="showNewModal">
@@ -177,8 +190,16 @@
 
     <div class="modal-body preview-body">
       <p class="preview-meta">
-        <strong>Status:</strong> {{ p.status | titlecase }} ·
-        <span class="slug">/{{ p.slug }}</span>
+        <strong>Status:</strong> {{ p.status | titlecase }}
+        <span class="slug"> · /{{ p.slug }}</span>
+
+        <span *ngIf="p.publishedAt">
+          · <strong>Published:</strong> {{ p.publishedAt | date:'MMM d, y, h:mm a' }}
+        </span>
+
+        <span *ngIf="!p.publishedAt && p.createdAt">
+          · <strong>Created:</strong> {{ p.createdAt | date:'MMM d, y, h:mm a' }}
+        </span>
       </p>
 
       <p class="preview-description">{{ p.description }}</p>

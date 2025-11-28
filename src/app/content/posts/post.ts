@@ -13,6 +13,10 @@ interface Post {
   description: string;
   content: string;
   status: string;
+
+  // ⭐ ADDITIONAL FIELDS FOR DATES
+  createdAt?: string;
+  publishedAt?: string | null;
 }
 
 @Component({
@@ -74,9 +78,18 @@ export class PostsComponent implements OnInit {
   }
 
   private emptyPost(): Post {
-    return { title: '', slug: '', description: '', content: '', status: 'draft' };
+    return {
+      title: '',
+      slug: '',
+      description: '',
+      content: '',
+      status: 'draft',
+      createdAt: undefined,
+      publishedAt: null,
+    };
   }
 
+  // LOAD
   loadPosts(): void {
     this.isLoading = true;
 
@@ -86,6 +99,7 @@ export class PostsComponent implements OnInit {
         this.filteredPosts = data;
         this.isLoading = false;
 
+        // ⭐ highlight card kung gikan sa Latest Activity
         if (this.pendingEditId) {
           const post = this.posts.find(x => x.id === this.pendingEditId);
           if (post?.id) {
@@ -102,17 +116,19 @@ export class PostsComponent implements OnInit {
     });
   }
 
+  // SEARCH
   onSearchChange(): void {
     const t = this.searchTerm.toLowerCase();
     this.filteredPosts = this.posts.filter(
       p =>
-        p.title?.toLowerCase().includes(t) ||
-        p.slug?.toLowerCase().includes(t) ||
-        p.description?.toLowerCase().includes(t) ||
+        (p.title || '').toLowerCase().includes(t) ||
+        (p.slug || '').toLowerCase().includes(t) ||
+        (p.description || '').toLowerCase().includes(t) ||
         this.stripHtml(p.content || '').toLowerCase().includes(t)
     );
   }
 
+  // ========== NEW POST ==========
   openNewModal(): void {
     this.newPost = this.emptyPost();
     this.showNewModal = true;
@@ -123,11 +139,23 @@ export class PostsComponent implements OnInit {
   }
 
   saveNewPost(): void {
-    if (!this.newPost.title || !this.newPost.slug) return;
+    if (!this.newPost.title || !this.newPost.slug) {
+      return;
+    }
 
     this.isSaving = true;
 
-    this.http.post<Post>(this.apiUrl, this.newPost).subscribe({
+    // ⭐ set createdAt always; set publishedAt kung published na
+    const nowIso = new Date().toISOString();
+
+    const payload: Post = {
+      ...this.newPost,
+      createdAt: nowIso,
+      publishedAt:
+        this.newPost.status === 'published' ? nowIso : null,
+    };
+
+    this.http.post<Post>(this.apiUrl, payload).subscribe({
       next: created => {
         this.posts.unshift(created);
         this.filteredPosts = [...this.posts];
@@ -141,6 +169,7 @@ export class PostsComponent implements OnInit {
     });
   }
 
+  // ========== EDIT ==========
   openEditModal(post: Post): void {
     this.editPost = { ...post };
     this.showEditModal = true;
@@ -152,12 +181,24 @@ export class PostsComponent implements OnInit {
 
   saveEditPost(): void {
     if (!this.editPost.id) return;
+
     this.isSaving = true;
 
-    this.http.put(`${this.apiUrl}/${this.editPost.id}`, this.editPost).subscribe({
+    // ⭐ kung gi-publish karon ug wala pay publishedAt → set now
+    let publishedAt = this.editPost.publishedAt ?? null;
+    if (this.editPost.status === 'published' && !publishedAt) {
+      publishedAt = new Date().toISOString();
+    }
+
+    const payload: Post = {
+      ...this.editPost,
+      publishedAt,
+    };
+
+    this.http.put(`${this.apiUrl}/${this.editPost.id}`, payload).subscribe({
       next: () => {
         const idx = this.posts.findIndex(p => p.id === this.editPost.id);
-        if (idx !== -1) this.posts[idx] = { ...this.editPost };
+        if (idx !== -1) this.posts[idx] = { ...payload };
         this.filteredPosts = [...this.posts];
         this.isSaving = false;
         this.showEditModal = false;
@@ -169,6 +210,7 @@ export class PostsComponent implements OnInit {
     });
   }
 
+  // ========== DELETE ==========
   deletePost(): void {
     if (!this.editPost.id) return;
     if (!confirm(`Delete post "${this.editPost.title}"?`)) return;
@@ -183,6 +225,7 @@ export class PostsComponent implements OnInit {
     });
   }
 
+  // ========== PREVIEW ==========
   openPreview(post: Post): void {
     this.previewPost = post;
     this.showPreviewModal = true;
@@ -193,6 +236,7 @@ export class PostsComponent implements OnInit {
     this.showPreviewModal = false;
   }
 
+  // UTIL
   stripHtml(html: string): string {
     const d = document.createElement('div');
     d.innerHTML = html || '';
