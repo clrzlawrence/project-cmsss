@@ -14,6 +14,9 @@ interface Post {
   content: string;
   status: string;
 
+  // ⭐ NEW: featured image URL
+  featuredImage?: string;          // ⭐ NEW
+
   // ⭐ ADDITIONAL FIELDS FOR DATES
   createdAt?: string;
   publishedAt?: string | null;
@@ -84,6 +87,7 @@ export class PostsComponent implements OnInit {
       description: '',
       content: '',
       status: 'draft',
+      featuredImage: '',        // ⭐ NEW
       createdAt: undefined,
       publishedAt: null,
     };

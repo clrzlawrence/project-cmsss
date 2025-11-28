@@ -30,7 +30,14 @@
     *ngFor="let post of filteredPosts"
     [ngClass]="{ 'highlight-card': post.id === highlightId }"
   >
-    <div class="thumbnail"></div>
+    <!-- ⭐ NEW: show featured image if present -->
+    <div class="thumbnail">
+      <img
+        *ngIf="post.featuredImage"
+        [src]="post.featuredImage"
+        [alt]="post.title"
+      />
+    </div>
 
     <h3>{{ post.title }}</h3>
     <p class="slug">/{{ post.slug }}</p>
@@ -91,6 +98,12 @@
         <textarea rows="2" [(ngModel)]="newPost.description"></textarea>
       </div>
 
+      <!-- ⭐ NEW: featured image URL field -->
+      <div class="form-row">
+        <label>Featured Image URL</label>
+        <input type="text" [(ngModel)]="newPost.featuredImage" />
+      </div>
+
       <div class="form-row">
         <label>Content</label>
         <angular-editor
@@ -140,6 +153,12 @@
       <div class="form-row">
         <label>Short Description</label>
         <textarea rows="2" [(ngModel)]="editPost.description"></textarea>
+      </div>
+
+      <!-- ⭐ NEW: featured image URL field -->
+      <div class="form-row">
+        <label>Featured Image URL</label>
+        <input type="text" [(ngModel)]="editPost.featuredImage" />
       </div>
 
       <div class="form-row">
@@ -203,6 +222,11 @@
       </p>
 
       <p class="preview-description">{{ p.description }}</p>
+
+      <!-- ⭐ NEW: show featured image in preview -->
+      <div *ngIf="p.featuredImage" class="preview-image-wrapper">
+        <img [src]="p.featuredImage" [alt]="p.title" class="preview-image" />
+      </div>
 
       <div class="preview-content" [innerHTML]="p.content"></div>
     </div>
